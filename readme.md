@@ -10,8 +10,8 @@
 1. Clone o repositório:
 
     ```sh
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
+    git clone https://github.com/bhfagundes/python-e-alem.git
+    cd python-e-alem
     ```
 
 2. Crie um arquivo `.env` baseado no `.env.example`:
