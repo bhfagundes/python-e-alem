@@ -1,3 +1,15 @@
+# FIAP
+## Desafio 
+
+Quando o assunto é cultivo, a análise do solo é crucial para entender o melhor momento para cultivo, rotação e até reposição de nutrientes. Para um bom cultivo é necessário um solo fértil, com nível de nutrientes adequados.
+Uma das maiores dores hoje do agronegócio, seja por custo financeiro ou temporal, é a recomendação de manutenções no solo.
+
+
+## Solução
+Desenvolver ferramentas de análise de solo que utilizam dados de sensores e algoritmos de aprendizado de máquina para fornecer recomendações de fertilização.
+Ferramentas utilizada: Pandas, NumPy, Scikit-learn, Matplotlib.
+
+
 ## Pré-requisitos
 
 - Docker
