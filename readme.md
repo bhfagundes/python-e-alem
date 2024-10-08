@@ -4,11 +4,9 @@
 Quando o assunto é cultivo, a análise do solo é crucial para entender o melhor momento para cultivo, rotação e até reposição de nutrientes. Para um bom cultivo é necessário um solo fértil, com nível de nutrientes adequados.
 Uma das maiores dores hoje do agronegócio, seja por custo financeiro ou temporal, é a recomendação de manutenções no solo.
 
-
 ## Solução
 Desenvolver ferramentas de análise de solo que utilizam dados de sensores e algoritmos de aprendizado de máquina para fornecer recomendações de fertilização.
-Ferramentas utilizada: Pandas, NumPy, Scikit-learn, Matplotlib.
-
+Ferramentas utilizadas: Pandas, NumPy, Scikit-learn, Matplotlib.
 
 ## Pré-requisitos
 
@@ -82,9 +80,25 @@ Ferramentas utilizada: Pandas, NumPy, Scikit-learn, Matplotlib.
 ## Estrutura de Diretórios
 
 - `config/`: Arquivos de configuração.
+  - `db_config.py`: Configurações de conexão com o banco de dados.
 - `db/`: Conexões e operações de banco de dados.
+  - `connection.py`: Gerenciamento de conexões com o banco de dados.
+- `migrations/`: Scripts de migração do banco de dados.
+  - `migration.py`: Script para criar e verificar tabelas no banco de dados.
+- `models/`: Modelos de dados.
+  - `analise_solo.py`: Definição da classe `AnaliseSolo` que representa a estrutura dos dados de análise de solo.
 - `repositories/`: Repositórios de dados (mapeamento de entidades do banco de dados).
+  - `analise_solo_repository.py`: Contém a lógica para salvar e recuperar dados de análise de solo no banco de dados.
+    - `salvar`: Insere um único registro de análise de solo.
+    - `salvar_multiplas_analises`: Insere múltiplos registros de análise de solo em uma única operação.
+    - `bulk_insert`: Insere dados em lote a partir de uma lista de tuplas.
 - `services/`: Regras de negócio.
+  - `analise_solo_service.py`: Contém a lógica de negócios para manipulação de dados de análise de solo.
+    - `salvar_analise`: Salva uma única análise de solo.
+    - `salvar_multiplas_analises`: Salva múltiplas análises de solo.
+    - `salvar_analise_em_lote`: Lê dados de um arquivo CSV e salva em lote.
+- `scripts/`: Scripts utilitários.
+  - `query_users.py`: Script para consultar usuários no banco de dados.
 
 ## Dependências
 
