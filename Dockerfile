@@ -1,7 +1,19 @@
 FROM python:3.9-slim
 
-# Instalar dependências
-RUN apt-get update && apt-get install -y libaio1 libaio-dev wget unzip gcc python3-dev
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    libaio1 \
+    libaio-dev \
+    wget \
+    unzip \
+    gcc \
+    python3-dev \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev
 
 # Baixar e instalar o Oracle Instant Client
 RUN wget https://download.oracle.com/otn_software/linux/instantclient/2350000/instantclient-basic-linux.x64-23.5.0.24.07.zip && \
