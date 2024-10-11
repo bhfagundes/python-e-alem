@@ -1,84 +1,94 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
-import seaborn as sns
 import matplotlib.pyplot as plt
 from services.analise_solo_service import AnaliseSoloService
 from migrations.migration import verificar_e_criar_tabela
-from scripts.query_users import query_users
-from models.analise_solo import AnaliseSolo
 
-# Função para prever a fertilidade do solo
-def prever_fertilidade(pH, umidade, temperatura, N, P, K, scaler, model):
-    input_data = [[pH, umidade, temperatura, N, P, K]]
-    input_data = scaler.transform(input_data)
-    prediction = model.predict(input_data)
-    return int(prediction[0])
+def validar_entrada(valor, min_valor, max_valor, nome_campo):
+    try:
+        valor_float = float(valor)
+        if min_valor <= valor_float <= max_valor:
+            return valor_float
+        else:
+            raise ValueError(f"{nome_campo} deve estar entre {min_valor} e {max_valor}")
+    except ValueError:
+        raise ValueError(f"{nome_campo} deve ser um número válido")
 
-if __name__ == "__main__":
-    # Executar a função query_users
-    #query_users()
+def obter_entrada_usuario(incluir_fertilidade=True):
+    pH = validar_entrada(input("pH (0-14): "), 0, 14, "pH")
+    umidade = validar_entrada(input("Umidade (%): "), 0, 100, "Umidade")
+    temperatura = validar_entrada(input("Temperatura (°C): "), -50, 50, "Temperatura")
+    N = validar_entrada(input("Nitrogênio (mg/kg): "), 0, 1000, "Nitrogênio")
+    P = validar_entrada(input("Fósforo (mg/kg): "), 0, 1000, "Fósforo")
+    K = validar_entrada(input("Potássio (mg/kg): "), 0, 1000, "Potássio")
+    
+    if incluir_fertilidade:
+        fertilidade = int(input("Fertilidade (0 para baixa, 1 para alta): "))
+        return pH, umidade, temperatura, N, P, K, fertilidade
+    else:
+        return pH, umidade, temperatura, N, P, K
 
-    # Verificar e criar tabela se necessário
-    verificar_e_criar_tabela()
-
-    # Passo 1: Coleta de Dados
-    data = {
-        'pH': [6.5, 7.0, 5.5, 6.0, 6.8, 7.2, 5.8, 6.3],
-        'umidade': [30, 45, 50, 35, 40, 55, 60, 33],
-        'temperatura': [20, 22, 19, 21, 23, 18, 17, 22],
-        'N': [10, 20, 15, 25, 18, 22, 14, 19],
-        'P': [5, 10, 7, 12, 8, 11, 6, 9],
-        'K': [8, 15, 10, 20, 13, 17, 9, 14],
-        'fertilidade': [1, 0, 1, 0, 1, 0, 1, 0]  
-    }
-
-    df = pd.DataFrame(data)
-
-    # Passo 2: Pré-processamento de Dados
-    X = df.drop('fertilidade', axis=1)
-    y = df['fertilidade']
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
-
-    # Passo 3: Análise Exploratória de Dados (EDA)
-    sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+def mostrar_grafico_fertilidade(fertilidade, pH, umidade, temperatura, N, P, K):
+    categorias = ['pH', 'Umidade', 'Temperatura', 'N', 'P', 'K']
+    valores = [pH, umidade, temperatura, N, P, K]
+    
+    plt.figure(figsize=(10, 6))
+    plt.bar(categorias, valores, color=['blue', 'green', 'red', 'cyan', 'magenta', 'yellow'])
+    plt.title(f"Análise do Solo - Fertilidade {'Alta' if fertilidade == 1 else 'Baixa'}")
+    plt.xlabel("Parâmetros")
+    plt.ylabel("Valores")
+    
+    for i, v in enumerate(valores):
+        plt.text(i, v, f'{v:.2f}', ha='center', va='bottom')
+    
+    plt.tight_layout()
     plt.show()
 
-    # Passo 4: Desenvolvimento de Modelos de Aprendizado de Máquina
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
-
-    # Passo 5: Avaliação do Modelo
-    y_pred = model.predict(X_test)
-    print(classification_report(y_test, y_pred))
-
-    # Exemplo de uso da função de previsão
-    pH = 6.5
-    umidade = 30
-    temperatura = 20
-    N = 10
-    P = 5
-    K = 8
-
-    fertilidade = prever_fertilidade(pH, umidade, temperatura, N, P, K, scaler, model)
-    print(f"A fertilidade prevista do solo é: {'Alta' if fertilidade == 1 else 'Baixa'}")
-
-    # Salvar dados no banco de dados
+if __name__ == "__main__":
+    verificar_e_criar_tabela()
     service = AnaliseSoloService()
-    for i in range(len(df)):
-        service.salvar_analise(df.iloc[i]['pH'], df.iloc[i]['umidade'], df.iloc[i]['temperatura'], df.iloc[i]['N'], df.iloc[i]['P'], df.iloc[i]['K'], df.iloc[i]['fertilidade'])
 
-    # Salvar dados em lote a partir de um arquivo CSV
-    #csv_file_path = 'path/to/your/csvfile.csv'
-    #service.salvar_analise_em_lote(csv_file_path)
+    while True:
+        print("\nEscolha uma opção:")
+        print("1 - Inserir dados manualmente")
+        print("2 - Ler arquivo CSV")
+        print("3 - Estimar fertilidade do solo")
+        print("4 - Treinar modelo")
+        print("5 - Sair")
+        
+        escolha = input("Digite o número da opção desejada: ")
 
-    # Salvar múltiplas análises
-    #analises = [AnaliseSolo(row.pH, row.umidade, row.temperatura, row.N, row.P, row.K, row.fertilidade) for row in df.itertuples(index=False)]
-    #service.salvar_multiplas_analises(analises)
+        if escolha == '1':
+            pH, umidade, temperatura, N, P, K, fertilidade = obter_entrada_usuario()
+            service.salvar_analise(pH, umidade, temperatura, N, P, K, fertilidade)
+            print("Dados inseridos com sucesso no banco de dados.")
+
+        elif escolha == '2':
+            caminho_csv = input("Digite o caminho do arquivo CSV: ")
+            try:
+                quantidade_processada = service.ler_e_salvar_csv(caminho_csv)
+                print(f"Foram processadas e salvas {quantidade_processada} análises do arquivo CSV.")
+            except Exception as e:
+                print(f"Erro ao processar o arquivo CSV: {str(e)}")
+
+        elif escolha == '3':
+            try:
+                pH, umidade, temperatura, N, P, K = obter_entrada_usuario(incluir_fertilidade=False)
+                fertilidade = service.prever_fertilidade(pH, umidade, temperatura, N, P, K)
+                print(f"A fertilidade prevista do solo é: {'Alta' if fertilidade == 1 else 'Baixa'}")
+                
+                mostrar_grafico_fertilidade(fertilidade, pH, umidade, temperatura, N, P, K)
+            except ValueError as e:
+                print(str(e))
+
+        elif escolha == '4':
+            print("Treinando o modelo...")
+            if service.treinar_modelo():
+                print("Modelo treinado com sucesso.")
+            else:
+                print("Falha ao treinar o modelo.")
+
+        elif escolha == '5':
+            print("Saindo do programa. Até logo!")
+            break
+
+        else:
+            print("Opção inválida. Por favor, escolha uma opção válida.")
