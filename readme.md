@@ -48,14 +48,6 @@ Ferramentas utilizadas: Pandas, NumPy, Scikit-learn, Matplotlib.
     docker run --env-file .env -p 8000:8000 nome-da-imagem
     ```
 
-### Usando Docker Compose
-
-1. Construa e inicie os serviços:
-
-    ```sh
-    docker-compose up --build
-    ```
-
 ### Executando Localmente
 
 1. Instale as dependências do projeto:
@@ -111,6 +103,30 @@ Um arquivo de exemplo `example.csv` está disponível na pasta `data/` do projet
 - `repositories/`: Repositórios de dados.
 - `services/`: Regras de negócio.
 - `data/`: Arquivos de dados, incluindo o exemplo CSV.
+- `tests/`: Testes unitários.
+
+## Testes Unitários
+
+Este projeto inclui testes unitários para garantir a qualidade e a confiabilidade do código. Os testes estão localizados no diretório `tests/`.
+
+Para executar os testes:
+
+1. Certifique-se de que todas as dependências estão instaladas:
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+2. Execute os testes usando pytest:
+
+    ```sh
+    pytest
+    ```
+
+Os principais arquivos de teste são:
+
+- `tests/test_analise_solo_service.py`: Testes para a classe AnaliseSoloService
+- `tests/test_analise_solo_repository.py`: Testes para a classe AnaliseSoloRepository
 
 ## Dependências
 
