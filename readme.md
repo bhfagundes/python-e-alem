@@ -72,33 +72,45 @@ Ferramentas utilizadas: Pandas, NumPy, Scikit-learn, Matplotlib.
     python main.py
     ```
 
-## Scripts
+## Fluxo de Uso
 
-- `main.py`: Ponto de entrada principal do projeto.
-- `scripts/query_users.py`: Script para consultar usuários.
+1. Ao iniciar o programa, você verá um menu com as seguintes opções:
+   - Inserir dados manualmente
+   - Ler arquivo CSV
+   - Estimar fertilidade do solo
+   - Treinar modelo
+   - Sair
+
+2. Para começar, você deve inserir alguns dados de treinamento:
+   - Use a opção "Inserir dados manualmente" para adicionar entradas individuais
+   - Ou use a opção "Ler arquivo CSV" para importar múltiplas entradas de uma vez
+
+3. Após inserir dados suficientes, use a opção "Treinar modelo" para criar um modelo de previsão
+
+4. Com o modelo treinado, você pode usar a opção "Estimar fertilidade do solo" para fazer previsões baseadas em novos dados
+
+## Exemplo de Arquivo CSV
+
+O arquivo CSV para importação deve seguir este formato:
+
+```csv
+pH,umidade,temperatura,N,P,K,fertilidade
+6.5,60,25,120,45,80,1
+5.8,45,22,80,30,60,0
+7.2,55,28,150,55,90,1
+```
+
+Um arquivo de exemplo `example.csv` está disponível na pasta `data/` do projeto.
 
 ## Estrutura de Diretórios
 
 - `config/`: Arquivos de configuração.
-  - `db_config.py`: Configurações de conexão com o banco de dados.
 - `db/`: Conexões e operações de banco de dados.
-  - `connection.py`: Gerenciamento de conexões com o banco de dados.
 - `migrations/`: Scripts de migração do banco de dados.
-  - `migration.py`: Script para criar e verificar tabelas no banco de dados.
 - `models/`: Modelos de dados.
-  - `analise_solo.py`: Definição da classe `AnaliseSolo` que representa a estrutura dos dados de análise de solo.
-- `repositories/`: Repositórios de dados (mapeamento de entidades do banco de dados).
-  - `analise_solo_repository.py`: Contém a lógica para salvar e recuperar dados de análise de solo no banco de dados.
-    - `salvar`: Insere um único registro de análise de solo.
-    - `salvar_multiplas_analises`: Insere múltiplos registros de análise de solo em uma única operação.
-    - `bulk_insert`: Insere dados em lote a partir de uma lista de tuplas.
+- `repositories/`: Repositórios de dados.
 - `services/`: Regras de negócio.
-  - `analise_solo_service.py`: Contém a lógica de negócios para manipulação de dados de análise de solo.
-    - `salvar_analise`: Salva uma única análise de solo.
-    - `salvar_multiplas_analises`: Salva múltiplas análises de solo.
-    - `salvar_analise_em_lote`: Lê dados de um arquivo CSV e salva em lote.
-- `scripts/`: Scripts utilitários.
-  - `query_users.py`: Script para consultar usuários no banco de dados.
+- `data/`: Arquivos de dados, incluindo o exemplo CSV.
 
 ## Dependências
 
